@@ -246,70 +246,76 @@ def categorizar_educacion(celda):
     except:
         return celda
     
-
-def test_normalidad(df, columna):
-
-    """Calculamos la normalidad
-    si lalongitud es > 5000 utilizamos Kolmogorov y sino Shapiro
-      si p_value > 0.05 : son normales, aceptamos h0
-      si p_value < 0.05 : no son normales, rechazamos h0"""
-
-    alpha = 0.05
-
-    longitud = df[columna].shape[0]
-
-    if longitud < 5000:
-
-        p_value = shapiro(df[columna]).pvalue
-
-        if p_value > alpha:
-            print("Los datos se ajustan a una distribución normal (p-value =", p_value, ")")
-        else:
-            print("Los datos no se ajustan a una distribución normal (p-value =", p_value, ")")
-
-    else: 
-        p_value = kstest(df[columna], "norm").pvalue
-
-        if p_value > alpha:
-            print("Los datos se ajustan a una distribución normal (p-value =", p_value, ")")
-        else:
-            print("Los datos no se ajustan a una distribución normal (p-value =", p_value, ")")        
-
-
-def test_homogeneidad(*args):
+def categorizar_cnae(celda):
+    try:
+        if celda == "A Agricultura ( A )":
+            return "Agricultura"
+        elif celda == "B_E Industrias extractivas, suministro de energía eléctrica, gas, vapor y  aire acondicionado, suministro de agua, actividades de saneamiento, gestión de residuos y descontaminación  ( B + D + E )":
+            return "Industrias extractivas"
+        elif celda == "C Industria manufacturera ( C )":
+            return "Industria manufacturera"
+        elif celda == "F Construcción ( F )":
+            return "Construcción"
+        elif celda == "Comercio al por mayor y al por menor, reparación de vehículos de motor y motocicletas, transporte y almacenamiento, hostelería ( G + H + I )":
+            return "Comercio, logistica y hosteleria"
+        elif celda == "J Información y comunicaciones ( J )":
+            return "Informacion y telecomunicaciones"
+        elif celda == "K Actividades financieras y de seguros (  K  )":
+            return "Finanzas y seguros"
+        elif celda == "L Actividades inmobiliarias ( L )":
+            return "Inmobiliarias"
+        elif celda == "Actividades profesionales, científicas y técnicas, actividades administrativas y servicios auxiliares ( M + N )":
+            return "Actividades cientificas, administrativas y axuliares"
+        elif celda == "Administración Pública y defensa, Seguridad social obligatoria, educación, actividades sanitarias y de servicios sociales ( O + P + Q )":
+            return "Admin.Publica, educacion y sanitarias"
+        elif celda == "Activ. artísticas, recreativas y de entretenimiento, hogares como empleadores domésticos y como productores de bienes y servicios para uso propio, activ. de organizaciones y organismos extraterritoriales, otros servicios ( R + S + T + U )":
+            return "Artisticas, labores domesticas"
+        elif celda == "Total":
+            return "Total"
+        elif celda == "Industria general":
+            return "Industria general"
+        
+        
+    except:
+        return celda
     
-    """ Si el p-valor < 0.05 podemos concluir que las varianzas son diferentes entre los grupos. Si el p-valor > 0.05, no podemos afirmar que las varianzas son diferentes"""
 
-    if len(args) == 2:
-        p_valor_varianza = stats.levene(*args, center = "median")[1]
+def separar_columna(celda):
+    try:
+        celda = celda.split(maxsplit=1)
+    
+    except:
+        celda
+
+    if len(celda) > 1:
+        return celda[1]
     else:
-        p_valor_varianza = stats.bartlett(*args)[1]
-        
-    alfa = 0.05
+        return celda[0]
 
-    if p_valor_varianza < alfa:
-        print("Podemos concluir que las varianzas son diferentes entre los grupos (p_valor_varianza =", p_valor_varianza, ")")
+
+def separar_columna_coma(celda):
+    try:
+        celda = celda.split(",", maxsplit=1)
+    
+    except:
+        celda
+
+    if len(celda) > 1:
+        return celda[0]
     else:
-        print("No podemos afirmar que las varianzas son diferentes (p_valor_varianza =", p_valor_varianza, ")") 
+        return celda[0]
+    
+def separar_numero(celda):
+    try:
+        celda = celda.split(maxsplit=1)
+    
+    except:
+        celda
 
-
-def test_man_whitney(dataframe, columnas_metricas, grupo_control, grupo_test, columna):
-   
-   control = dataframe[dataframe[columna] == grupo_control]
-   test = dataframe[dataframe[columna] == grupo_test]
-
-   for metrica in columnas_metricas:
-        
-        metrica_control = control[metrica]
-        metrica_test = test[metrica]
-        
-        # aplicamos el estadístico
-        u_statistic, p_value = stats.mannwhitneyu(metrica_control, metrica_test)
-        
-        if p_value < 0.05:
-            print(f"Para la métrica {metrica}, las medianas son diferentes {p_value}.")
-        else:
-            print(f"Para la métrica {metrica}, las medianas son iguales {p_value}.")
+    if len(celda) > 1:
+        return celda[0]
+    else:
+        return celda[0]
     
      
 # %%

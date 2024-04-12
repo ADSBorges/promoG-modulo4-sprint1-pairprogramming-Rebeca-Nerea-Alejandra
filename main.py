@@ -6,48 +6,35 @@ import seaborn as sns
 
 # %%
 
-#Apertura fichero brecha salariar (paises UE 2002-2022 dato %)
+# ✅ Apertura fichero brecha salariar (paises UE 2002-2022 dato %)
 df_brecha = pd.read_excel("files/brecha_salarial_UE.xlsx")
 df_brecha
 df_brecha.to_csv('doc_graficar/brecha_genero.csv')
 
 
 # %%
-# Apertura archivo educacion (2016 a 2022 - Division por genero y tipo educacion)
+# ✅ Apertura archivo educacion (2016 a 2022 - Division por genero y tipo educacion)
 df_formacion = pd.read_excel("files/Nivel_formacion_por_genero_sector_2016_2022.xlsx")
 df_formacion.name = "Formacion"
 sp.cambio_nombre_columnas_df(df_formacion)
 
-def separar_columna(celda):
-    try:
-        celda = celda.split(maxsplit=1)
-    
-    except:
-        celda
-
-    if len(celda) > 1:
-        return celda[1]
-    else:
-        return celda[0]
-
-df_formacion["sector_del_nivel_de_formación_alcanzado"] = df_formacion["sector_del_nivel_de_formación_alcanzado"].apply(separar_columna)
+df_formacion["sector_del_nivel_de_formación_alcanzado"] = df_formacion["sector_del_nivel_de_formación_alcanzado"].apply(sp.separar_columna)
 
 df_formacion.to_csv('doc_graficar/formacion.csv')
 
 
-#%%
-sp.exploracion_col_df(df_formacion)
+#✅ Apertura archivo ocupacion por CNAE (2016 a 2022 - Division por genero)
 
-
-
-# %%
-df_ocupados = pd.read_excel("files/Ocupados_por_actividad_genero_CCAA_2016_2023.xlsx")
+df_ocupados = pd.read_csv("files/files sin modificacion/Ocupados_por_actividad_genero_CCAA_2016_2023.csv", sep=";")
 df_ocupados.name = "Ocupacion"
 sp.cambio_nombre_columnas_df(df_ocupados)
 
-def separar_columna(celda):
-    return celda.split(" ")[1]
+df_ocupados["comunidades_y_ciudades_autónomas"] = df_ocupados["comunidades_y_ciudades_autónomas"].apply(sp.separar_columna)
+df_ocupados["comunidades_y_ciudades_autónomas"] = df_ocupados["comunidades_y_ciudades_autónomas"].apply(sp.separar_columna_coma)
+df_ocupados["rama_de_actividad_-_cnae_2009"] = df_ocupados["rama_de_actividad_-_cnae_2009"].apply(sp.categorizar_cnae)
+df_ocupados["total"] = df_ocupados["total"].str.replace(".","").str.replace(",",".")
 
+df_ocupados.to_csv('doc_graficar/ocupacion.csv')
 
 
 # %%
