@@ -24,7 +24,6 @@ df_formacion.to_csv('doc_graficar/formacion.csv')
 
 
 #✅ Apertura archivo ocupacion por CNAE (2016 a 2022 - Division por genero)
-
 df_ocupados = pd.read_csv("files/files sin modificacion/Ocupados_por_actividad_genero_CCAA_2016_2023.csv", sep=";")
 df_ocupados.name = "Ocupacion"
 sp.cambio_nombre_columnas_df(df_ocupados)
@@ -36,29 +35,77 @@ df_ocupados["total"] = df_ocupados["total"].str.replace(".","").str.replace(",",
 
 df_ocupados.to_csv('doc_graficar/ocupacion.csv')
 
+# ✅ Apertura archivo poblacion España (2002 a 2023 - Division por genero)
+df_poblacion_españa = pd.read_csv("files/poblacion_españa_2002_2023.csv", sep=";")
+df_poblacion_españa.name = "Poblacion España"
+sp.cambio_nombre_columnas_df(df_poblacion_españa)
 
-# %%
+
+def cambiar_punto(celda):
+    return int(str(celda).replace(".", "").replace(",", ""))
+
+def separar_celda_t(celda):
+    try:
+        celda = celda.split("T", maxsplit=1)
+        return celda[0]
+    
+    except:
+        return celda
+
+df_poblacion_españa["total"] = df_poblacion_españa["total"].apply(cambiar_punto)
+df_poblacion_españa["periodo"] = df_poblacion_españa["periodo"].apply(separar_celda_t)
+df_poblacion_españa.drop(columns=["edad","unidad"],inplace=True)
+
+#df_poblacion_españa.to_csv('doc_graficar/poblacion.csv')
+
+# ✅ Apertura archivo salario por jornada España (2002 a 2023 - Division por genero)
+
 df_salario_jornada = pd.read_excel("files/salario_medio_jornada_completa_2016_2022.xlsx")
-df_salario_jornada
+df_salario_jornada.name = "Salario Jornada completa"
 
+df_filtrado = df_salario_jornada[df_salario_jornada["Decil"] == "Total decil"]
+
+#df_filtrado.to_csv('doc_graficar/salario_jornada.csv')
+
+# ✅ Apertura archivo salario por CNAE España (2002 a 2023 - Division por genero)
 
 df_salario_sector = pd.read_excel("files/salario_medio_por_sector_genero_2016__2021.xlsx")
-df_salario_sector
+df_salario_sector.name = "Salario por genero y CNAE"
 
-# %%
+df_salario_sector["Sectores de actividad económica"] = df_salario_sector["Sectores de actividad económica"].apply(sp.separar_columna)
+
+#sp.exploracion_col_df(df_salario_sector)
+
+# condicion1 = df_salario_sector["Sectores de actividad económica"] == "Información y comunicaciones"
+# condicion2 = df_salario_sector["Periodo"] == 2020
+
+# df_salario_sector[condicion1 & condicion2]
+
+df_salario_sector.to_csv('doc_graficar/salario_sector.csv')
+
+# ✅ Apertura archivo persoans que han pedido excedencia por cuidado de menores en España (2005 a 2023 - Division por genero)
 excedencia = pd.read_excel("files/excedendia_por_cuidado_hijos.xlsx")
 excedencia
+excedencia.to_csv('doc_graficar/excedencia.csv')
 
+# ✅ Apertura archivo horas semanales cuidado y labores hogar (UE y España)
 
+horas_cuidado_familiar = pd.read_excel("files/tasa_actividad_UE.xlsx")
+horas_cuidado_familiar.to_csv('doc_graficar/horas_cuidado_familiar.csv')
+
+# ✅ Apertura archivo Tasa actividad (UE)
 tasa_actividad = pd.read_excel("files/tasa_actividad_UE.xlsx")
 tasa_actividad
+tasa_actividad.to_csv('doc_graficar/tasa_actividad_ue.csv')
 
-
+#%%
+# ✅ Apertura archivo Tasa paro (UE)
 tasa_paro = pd.read_excel("files/tasa_paro.xlsx")
 tasa_paro
 
-horas_cuidado_hogar = pd.read_excel("files/horas_semanales_cuidados_hogar_2016.xlsx")
-horas_cuidado_hogar
+tasa_paro.to_csv('doc_graficar/tasa_paro_ue.csv')
+
+
 
 
 # %%

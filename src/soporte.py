@@ -317,5 +317,6 @@ def separar_numero(celda):
     else:
         return celda[0]
     
+
      
 # %%
