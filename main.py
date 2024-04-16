@@ -65,21 +65,27 @@ df_salario_jornada.name = "Salario Jornada completa"
 
 df_filtrado = df_salario_jornada[df_salario_jornada["Decil"] == "Total decil"]
 
+
+display(df_filtrado)
 #df_filtrado.to_csv('doc_graficar/salario_jornada.csv')
 
 # ✅ Apertura archivo salario por CNAE España (2002 a 2023 - Division por genero)
+#%%
 
 df_salario_sector = pd.read_excel("files/salario_medio_por_sector_genero_2016__2021.xlsx")
 df_salario_sector.name = "Salario por genero y CNAE"
 
 df_salario_sector["Sectores de actividad económica"] = df_salario_sector["Sectores de actividad económica"].apply(sp.separar_columna)
+df_salario_sector["Total"] = df_salario_sector["Total"].apply(abs)
 
+#%%
 #sp.exploracion_col_df(df_salario_sector)
 
 # condicion1 = df_salario_sector["Sectores de actividad económica"] == "Información y comunicaciones"
 # condicion2 = df_salario_sector["Periodo"] == 2020
 
 # df_salario_sector[condicion1 & condicion2]
+
 
 df_salario_sector.to_csv('doc_graficar/salario_sector.csv')
 
@@ -89,14 +95,20 @@ excedencia
 excedencia.to_csv('doc_graficar/excedencia.csv')
 
 # ✅ Apertura archivo horas semanales cuidado y labores hogar (UE y España)
-
-horas_cuidado_familiar = pd.read_excel("files/tasa_actividad_UE.xlsx")
+#%%
+horas_cuidado_familiar = pd.read_excel("files/horas_semanales_cuidados_hogar_2016.xlsx")
+horas_cuidado_familiar
 horas_cuidado_familiar.to_csv('doc_graficar/horas_cuidado_familiar.csv')
+
+#%%
+display(horas_cuidado_familiar)
 
 # ✅ Apertura archivo Tasa actividad (UE)
 tasa_actividad = pd.read_excel("files/tasa_actividad_UE.xlsx")
 tasa_actividad
-tasa_actividad.to_csv('doc_graficar/tasa_actividad_ue.csv')
+# tasa_actividad.to_csv('doc_graficar/tasa_actividad_ue.csv')
+#%%
+display(tasa_actividad)
 
 #%%
 # ✅ Apertura archivo Tasa paro (UE)
